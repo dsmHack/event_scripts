@@ -1,4 +1,5 @@
-##Participant Onboarding Data Contract
+## Participant Onboarding Data Contract
+
 This is the data contract for what data will be provided to any onboarding scripts. The data will be provided via a 
 `participants.json` file.
 
