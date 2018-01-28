@@ -4,7 +4,7 @@ This is the data contract for what data will be provided to any onboarding scrip
 `participants.json` file.
 
 
-Version: `1.0.0`
+Version: `1.1.0`
 ```
 {
   "participants": [
@@ -32,6 +32,7 @@ Version: `1.0.0`
         "folder2"
       ]
     }
-  }
+  },
+  "numberOfTeams": 15
 }
 ```
