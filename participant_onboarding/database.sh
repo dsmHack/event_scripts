@@ -172,8 +172,9 @@ if [ "$ACTION" == "setup" ]; then
    #echo "Commands:"
    #echo $SELUSER
    #echo $CREATEUSER
+   ITEM="$DBNAME,$UNAME,$PASS"
  
-   RESULTS+=("$DBNAME,$UNAME,$PASS\n")
+   RESULTS+="$ITEM\n"
 done   
 
 echo "Writing Results"
