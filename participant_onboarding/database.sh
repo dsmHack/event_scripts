@@ -16,8 +16,8 @@ ADMINCHECKDB='SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_N
 ADMINDROPDB='drop database %s ; '
 ADMINCREATEDB="create database %s $COLLATE; "
 
-ADMINCHECKUSER='select * from user where user = "%s";'
-ADMINDELETEUSER='delete from user where user = "%s";'
+ADMINCHECKUSER='use $ADMINDB; select * from user where user = "%s";'
+ADMINDELETEUSER='use $ADMINDB; delete from user where user = "%s";'
 ADMINCREATEUSER="GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%' identified by '%s';"
 
 #DEFAULT ACTION
