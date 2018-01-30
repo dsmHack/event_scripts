@@ -14,7 +14,7 @@ ADMINCHECK='show tables;'
 
 ADMINCHECKDB='SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "%s";'
 ADMINDROPDB='drop database %s ; '
-ADMINCREATEDB='create database %s $COLLATE; '
+ADMINCREATEDB="create database %s $COLLATE; "
 
 ADMINCHECKUSER='select from user where user = "%s";'
 ADMINDELETEUSER='delete from user where user = "%s";'
@@ -78,6 +78,7 @@ while true; do
     esac
 done
 
+
 # Check for our required Binaries..
 
 if ! [ -x "$JSONBIN" ]; then 
@@ -99,13 +100,6 @@ echo "mysql: $DBBIN"
 CONTRACT="$(cat $INPUT)"
 
 echo "Processing $INPUT"
-
-DBCMD="$DBBIN $DBARGS -u $DBUSER -p -e "
-
-# check for database access
-echo "Checking database permissions...."
-
-
 # Read json
 TEAMNUM=`echo ${CONTRACT} | $JSONBIN '.numberOfTeams' `
 if [ $? -ne 0 ]; then
@@ -113,6 +107,16 @@ if [ $? -ne 0 ]; then
    exit 1;
 fi
 echo "Processing $TEAMNUM teams";
+
+echo -n "Password for $DBUSER:"
+read -s PASS
+echo
+
+DBCMD="$DBBIN $DBARGS -u $DBUSER -p$PASS -e "
+
+# check for database access
+echo "Checking database permissions...."
+`$DBCMD "use $ADMINDB; $ADMINCHECK"`
 
 # action
 # setup = installs new databases/users for the current year (INPUT) based on json file.
@@ -134,7 +138,7 @@ if [ "$ACTION" == "setup" ]; then
    OUT=`$DBCMD "$CHKDB"`
 
    echo "Dropping Database"
-   OUT=`$DBCMD "$DROPDB"`
+   OUT=`$DBCMD "$DROPDB" >/dev/null `
  
    echo "Creating Database"
 
