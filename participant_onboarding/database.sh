@@ -164,7 +164,7 @@ if [ "$ACTION" == "setup" ]; then
    #ya i know shouldn't just ignore stderr
    OUT=`$DBCMD "use $ADMINDB; $DELETEUSER" 2>/dev/null `
 
-   echo "Creating user and assigning permissions to database"
+   echo "Creating user $UNAME and assigning permissions to database $DBNAME"
    PASS=`$SHUFBIN -n2 $RANDOMWORDS | sed 'N;s/\n/_/'` 
    printf -v CREATEUSER "$ADMINCREATEUSER" "$DBNAME" "$UNAME" "$PASS"
    OUT=`$DBCMD "$CREATEUSER"`
@@ -173,16 +173,24 @@ if [ "$ACTION" == "setup" ]; then
    #echo $SELUSER
    #echo $CREATEUSER
  
-   RESULTS+=("$DBNAME,$UNAME,$PASS")
+   RESULTS+=("$DBNAME,$UNAME,$PASS\n")
 done   
 
+echo "Writing Results"
 if [ "$OUTPUT" == "" ]; then
       echo ${RESULTS[@]}
 else
       echo "${RESULTS[@]}" > $OUTPUT
 fi
 
+echo "Setup Complete."
 # another action
 
+elif [ "$ACTION" == "remove" ]; then
+echo "NOT Implemented yet.. :("
+elif [ "$ACTION" == "backup" ]; then
+echo "NOT Implemented yet.. :("
+else 
+echo "No Action jackson"
 fi
 
