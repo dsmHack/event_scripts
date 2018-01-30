@@ -97,6 +97,8 @@ echo "mysql: $DBBIN"
 #parsing input
 CONTRACT="$(cat $INPUT)"
 
+echo "Processing $INPUT"
+
 DBCMD="$DBBIN $DBARGS -u $USER -p -e "
 
 # check for database access
@@ -167,6 +169,7 @@ if [ "$ACTION" == "setup" ]; then
         echo $DBNAME,$UNAME,$PASS
    else
         echo "$DBNAME,$UNAME,$PASS" > $OUTPUT
-   done
+   fi
+done   
 fi
 
