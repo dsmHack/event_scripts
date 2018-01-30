@@ -16,7 +16,7 @@ ADMINCHECKDB='SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_N
 ADMINDROPDB='drop database %s ; '
 ADMINCREATEDB="create database %s $COLLATE; "
 
-ADMINCHECKUSER='select from user where user = "%s";'
+ADMINCHECKUSER='select * from user where user = "%s";'
 ADMINDELETEUSER='delete from user where user = "%s";'
 ADMINCREATEUSER="GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%' identified by '%s';"
 
@@ -138,7 +138,8 @@ if [ "$ACTION" == "setup" ]; then
    OUT=`$DBCMD "$CHKDB"`
 
    echo "Dropping Database"
-   OUT=`$DBCMD "$DROPDB" >/dev/null `
+   #ya i know shouldn't just ignore stderr
+   OUT=`$DBCMD "$DROPDB" 2>/dev/null `
  
    echo "Creating Database"
 
@@ -158,7 +159,8 @@ if [ "$ACTION" == "setup" ]; then
    echo "Removing existing user"
 
    printf -v DELETEUSER "$ADMINDELETEUSER" "$UNAME"
-   OUT=`$DBCMD "$DELETEUSER"`
+   #ya i know shouldn't just ignore stderr
+   OUT=`$DBCMD "$DELETEUSER" 2>/dev/null `
 
    echo "Creating user and assigning permissions to database"
    PASS=`$SHUFBIN -n2 $RANDOMWORDS | sed 'N;s/\n/_/'` 
