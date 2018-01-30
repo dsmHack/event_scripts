@@ -16,9 +16,11 @@ ADMINCHECKDB='SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_N
 ADMINDROPDB='drop database %s ; '
 ADMINCREATEDB="create database %s $COLLATE; "
 
-ADMINCHECKUSER='use $ADMINDB; select * from user where user = "%s";'
-ADMINDELETEUSER='use $ADMINDB; delete from user where user = "%s";'
+ADMINCHECKUSER='select * from user where user = "%s";'
+ADMINDELETEUSER='delete from user where user = "%s";'
 ADMINCREATEUSER="GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%' identified by '%s';"
+
+RESULTS=()
 
 #DEFAULT ACTION
 ACTION='setup'
@@ -154,13 +156,13 @@ if [ "$ACTION" == "setup" ]; then
    echo "Checking for existing user"
 
    printf -v CHECKUSER "$ADMINCHECKUSER" "$UNAME"
-   OUT=`$DBCMD "$CHECKUSER"`
+   OUT=`$DBCMD "use $ADMINDB; $CHECKUSER"`
 
    echo "Removing existing user"
 
    printf -v DELETEUSER "$ADMINDELETEUSER" "$UNAME"
    #ya i know shouldn't just ignore stderr
-   OUT=`$DBCMD "$DELETEUSER" 2>/dev/null `
+   OUT=`$DBCMD "use $ADMINDB; $DELETEUSER" 2>/dev/null `
 
    echo "Creating user and assigning permissions to database"
    PASS=`$SHUFBIN -n2 $RANDOMWORDS | sed 'N;s/\n/_/'` 
@@ -171,12 +173,16 @@ if [ "$ACTION" == "setup" ]; then
    #echo $SELUSER
    #echo $CREATEUSER
  
- 
-   if [ "$OUTPUT" == "" ]; then
-        echo $DBNAME,$UNAME,$PASS
-   else
-        echo "$DBNAME,$UNAME,$PASS" > $OUTPUT
-   fi
+   RESULTS+=("$DBNAME,$UNAME,$PASS")
 done   
+
+if [ "$OUTPUT" == "" ]; then
+      echo ${RESULTS[@]}
+else
+      echo "${RESULTS[@]}" > $OUTPUT
+fi
+
+# another action
+
 fi
 
