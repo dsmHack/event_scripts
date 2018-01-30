@@ -25,6 +25,7 @@ ACTION='setup'
 OUTPUT=""
 INPUT='DATA_CONTRACT.json'
 WORDS=$RANDOMWORDS
+DBUSER=$ADMINDBUSER
 
 #options
 SHORTOPTIONS="vw:u:i:o:a:"
@@ -51,7 +52,7 @@ while true; do
             shift 2
 	    ;;
         -u|--user)
-            USER="$2"
+            DBUSER="$2"
             shift 2
 	    ;;
         -i|--input)
@@ -99,7 +100,7 @@ CONTRACT="$(cat $INPUT)"
 
 echo "Processing $INPUT"
 
-DBCMD="$DBBIN $DBARGS -u $USER -p -e "
+DBCMD="$DBBIN $DBARGS -u $DBUSER -p -e "
 
 # check for database access
 echo "Checking database permissions...."
