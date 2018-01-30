@@ -4,7 +4,6 @@ YYYY=`date +'%Y'`
 JSONBIN="$(command -v jq)"
 DBBIN="$(command -v mysql)"
 SHUFBIN="$(command -v shuf)"
-CONTRACT="$(cat DATA_CONTRACT.json)"
 DBARGS="--raw"
 COLLATE="" # "character set utf8 collate utf8_bin"
 RANDOMWORDS="random-words.txt"
@@ -23,6 +22,9 @@ ADMINCREATEUSER="GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%' identified by '%s';"
 
 #DEFAULT ACTION
 ACTION='setup'
+OUTPUT=""
+INPUT='DATA_CONTRACT.json'
+WORDS=$RANDOMWORDS
 
 #options
 SHORTOPTIONS="vw:u:i:o:a:"
@@ -75,12 +77,6 @@ while true; do
     esac
 done
 
-# handle non-option arguments
-if [[ $# -ne 1 ]]; then
-    echo "$0: A single input file is required."
-    exit 4
-fi
-
 # Check for our required Binaries..
 
 if ! [ -x "$JSONBIN" ]; then 
@@ -97,6 +93,9 @@ echo "JsonParser: $JSONBIN"
 echo "mysql: $DBBIN"
 
 # Get down to business
+
+#parsing input
+CONTRACT="$(cat $INPUT)"
 
 DBCMD="$DBBIN $DBARGS -u $USER -p -e "
 
